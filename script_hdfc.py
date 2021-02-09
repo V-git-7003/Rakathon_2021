@@ -12,8 +12,8 @@ class BrickSetSpider(scrapy.Spider):
         for a_class in response.css(xp).extract():
             temp_list.append("https://www.moneycontrol.com"+a_class)
         
-        #st_url = 'https://www.moneycontrol.com/company-article/hdfcbank/news/HDF01'
-        temp_list.append(start_urls)
+        st_url = 'https://www.moneycontrol.com/company-article/hdfcbank/news/HDF01'
+        temp_list.append(st_url)
         
         print("temp list ",temp_list,'Length of the list',len(temp_list))
         
