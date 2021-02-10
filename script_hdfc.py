@@ -1,31 +1,48 @@
 import scrapy
 from scrapy import Request
-class BrickSetSpider(scrapy.Spider):
-    name = "brickset_spider"
-    start_urls = ['https://www.moneycontrol.com/company-article/hdfcbank/news/HDF01']
+import time
+
+class BankParse(scrapy.Spider):
+    name = "bank_parser"
+    start_urls = ['https://www.moneycontrol.com/company-article/statebankindia/news/SBI']
     
     def parse(self, response):
-        xp = 'div.pages a::attr(href)'
-
-        temp_list = []
-
-        for a_class in response.css(xp).extract():
-            temp_list.append("https://www.moneycontrol.com"+a_class)
+        PAGES_PATH = 'div.pages a::attr(href)'
+        YEAR_SELECTOR = 'div.FR.yrs a::attr(href)'
         
-        st_url = 'https://www.moneycontrol.com/company-article/hdfcbank/news/HDF01'
-        temp_list.append(st_url)
+          
+        years_link = response.css(YEAR_SELECTOR).extract()[0:7]
+        time.sleep(3)
+        #print(years_link)
+        print('\n Years:')  
+        years_link = ["https://www.moneycontrol.com"+ year for year in years_link] #concatinating for full list
+        print(years_link)
         
-        print("temp list ",temp_list,'Length of the list',len(temp_list))
-        
-        return (Request(url, callback=self.parse_manga_list_page) for url in temp_list)
-       
+        return (Request(year,callback=self.page_parser) for year in years_link)
     
-    def parse_manga_list_page(self, response):
-        SET_SELECTOR = 'div.MT15'
-        for div_classes in response.css(SET_SELECTOR):
-              NAME_SELECTOR = 'a::attr(href)'
-              print('name', div_classes.css(NAME_SELECTOR).extract_first())
-              print()
-               
+  
+    def page_parser(self, response):
+        #SET_SELECTOR = 'div.MT15'
+        PAGES_PATH = 'div.pages a::attr(href)'
+        #YEAR_SELECTOR = 'div.FR.yrs'
+        time.sleep(1)
+        pages_link = response.css(PAGES_PATH).extract()
+
+        #print('\n Pages:')
+        pages_link = ["https://www.moneycontrol.com"+page for page in pages_link]
+        print(pages_link)
+        print('\n'*4)
+        return (Request(page,callback=self.content_parser) for page in pages_link)   
+   
+    def content_parser(self,response):
+       #TITLE_PATH = 'h1::text'
+       print('\n*2 new page:')
+       time.sleep(2)
+       yield {'title':response.css('h1::text').get(),
+              'date':response.css('div.article_schedule span::text').get(), 
+              'time':response.css('div.article_schedule::text').getall()[1],
+              'content':response.css('div.content_wrapper p::text').getall() 
+              }  
+
 
 
