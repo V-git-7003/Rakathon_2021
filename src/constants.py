@@ -1,0 +1,6 @@
+div_pages= "div.page"
+href = "a::attr(href)"
+space = " "
+name = "money_control_crawler"
+file_name = "resources/banking_url.properties"
+current_page = "https://www.moneycontrol.com/company-article/hdfcbank/news/HDF01"
