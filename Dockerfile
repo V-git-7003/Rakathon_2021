@@ -1,9 +1,11 @@
 FROM python:3.8
 
-WORKDIR /hackathon_2021
+WORKDIR /Hackathon_2021
 
 RUN pip install scrapy
 
+RUN pip install boto3
+
 COPY / .
 
-CMD [ "python", "./src/test.py" ]
+CMD [ "python", "./src/bankingcrawler.py" ]
