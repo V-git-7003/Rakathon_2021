@@ -7,12 +7,12 @@ import logging
 import test as tp
 
 class BankingCrawler(scrapy.Spider):
-    name = "brickset_spider"
+    name = "Bank_Crawler"
     
     start_urls = ['https://www.moneycontrol.com/company-article/indusindbank/news/IIB']
 
-    def __init__(self, temp="",updated_path=""):
-        self.temp=temp
+    def __init__(self, bank_id="",updated_path=""):
+        self.bank_id=bank_id
         self.updated_path=updated_path
 
     def parse(self, response):
@@ -26,10 +26,10 @@ class BankingCrawler(scrapy.Spider):
         years_test = []
         for year in years_link:
             years_test.append('https://www.moneycontrol.com'+year)
-        return (Request(url, callback=self.parse_manga_list_page) for url in years_test)
+        return (Request(url, callback=self.page_parser) for url in years_test)
 
        
-    def parse_manga_list_page(self, response):
+    def page_parser(self, response):
         PAGES_PATH = 'div.pages a::attr(href)'
         pages_link = response.css(PAGES_PATH).extract()
         current_page = str(response.css("div.pages.MR10.MT15 span b::text").get())
@@ -46,53 +46,53 @@ class BankingCrawler(scrapy.Spider):
 
         current_doc = 'https://www.moneycontrol.com' + pages_link[0].replace(current_,"pageno="+current_page)
         pages_test.append(current_doc)
-        return (Request(url, callback=self.content_parser) for url in pages_test)
+        return (Request(url, callback=self.link_parser) for url in pages_test)
 
-    def content_parser(self,response):
+    def link_parser(self,response):
         this = "h1.b_42.PT20::text"
         title = response.css(this).get()
-        self.temp = title.split()[0]
+        self.bank_id = title.split()[0]
         PAGES_PATH = 'div.FL.PR20 a::attr(href)'
         expanded = response.css(PAGES_PATH).extract()
         test = []
         for page in expanded:
             test.append('https://www.moneycontrol.com'+page)
-        return (Request(url,callback=self.test_parse) for url in test)
+        return (Request(url,callback=self.content_parser) for url in test)
 
-    #TODO create exponential back off 
-    def test_parse(self,response):
-        self_temp = self.temp
+    
+    def content_parser(self,response):
+        bank = self.bank_id
         date = response.css('div.article_schedule span::text').get()
-        if(not (not (date and not date.isspace()))):
+        if  (date and not date.isspace()):
             data = {}
-            data[self_temp] = []
-            data[self_temp].append({
+            data[bank] = []
+            data[bank].append({
                 'title': response.css('h1::text').get(),
                 'date': date,
                 'time': 'None' if len(response.css('div.article_schedule::text'))<2 else  response.css('div.article_schedule::text').getall()[1],
                 'content': response.css('div.content_wrapper p::text').getall()
             })
-            test_object = {} 
-            updated_path = self.updated_path+"/"+self_temp+".json"
+            news = {} 
+            updated_path = self.updated_path+"/"+bank+".json"
 
             if not os.path.exists(updated_path):
                 with open(updated_path, 'w') as outfile: 
-                    json.dump(test_object,outfile)
+                    json.dump(news,outfile)
 
             with open(updated_path) as outfile:
-                test_object = json.load(outfile)
+                news = json.load(outfile)
              
-            if self_temp not in test_object:
-                test_object=data
+            if bank not in news:
+                news=data
             else:
-                test_object[self_temp].append({
+                news[bank].append({
                     'title': response.css('h1::text').get(),
                     'date': date,
                     'time': 'None' if len(response.css('div.article_schedule::text'))<2 else  response.css('div.article_schedule::text').getall()[1],
                     'content': response.css('div.content_wrapper p::text').getall()
                     })
             with open(updated_path, "w+") as outfile:
-                json.dump(test_object,outfile)
+                json.dump(news,outfile)
             print("done")
         else:
             print("The record misses dates for following -->" , response.url)
@@ -109,4 +109,4 @@ process = CrawlerProcess()
 process.crawl(BankingCrawler)
 process.start()
 
-print("uploaded to file --> ",updloadfile("test-krishna-tbd-1"))
+print("uploaded to file --> ",updloadfile("s3_bucket_name"))
