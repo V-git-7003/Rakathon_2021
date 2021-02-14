@@ -8,10 +8,7 @@ def upload_file(bucket):
     cwd = os.getcwd()
     path_of_dir = format(cwd)
     get_all_file = find("*.json",path_of_dir.replace("/src","/files"))
-    s3_client = boto3.client('s3',
-        aws_access_key_id="AKIAVM25SKAHN4NMSC2H",
-        aws_secret_access_key="st9FucT2XGsGaL90/fFluN7TCacgWcLheBS9A0ki"
-    )
+    s3_client = boto3.client('s3')
     try:
         for file_name in get_all_file:
             length = len(file_name.split("/"))
