@@ -1,3 +1,11 @@
 # Hackathon_2021
-Hdfc script
+
+link to wiki for design of the project 
+
+# Crawler explaination
+
+# Model explaination
+
+# How to execute and use the projects 
+
 
