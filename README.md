@@ -9,11 +9,11 @@ There are two machine learning models (Naive Bayes and Logistic Regression), whi
 The ETL process accommodates for news articles published after 3:30 pm to be influencing only the next days stock price.  It also allocates the news published on holidays to the next working day of that particular stock (the number of holidays that are accounted for are upto two days). **This is the largest data on this category that is web parsed from the public domain to the best of our knowledge!**  The news articles that are published on the same day are compressed to a single news article, and labelled based on the profit/loss feature built from the Yahoo APi.  
 
 
-# Application
+## Application
 The user inputs the news article from the postman request, which is read API. This API uses one of our trained model either a Naive Bayes model or Logistic Regression model, and it outputs it recommendation as either a "positive news" or "negative news"!
 
 
-# Future
+## Future
 **In our future version there will be UI hosted in amazon, and the API is going to be done in serverless Lambda application. Hence, the user will have a smooth experience. Furthermore, we will generate artificial news articles to balance as well as increase the data count. This will enable us to use more sophisticated models such as Convolution Neural Network. **
 
 **To summarize, in future the user will have UI with input box, and a submit button as well as better prediction results. Currently, the prediction accuracy is around 60% for both the models. Hence, by default we use the Naive Bayes model, which in future will left out at the users discretion to choice the model.**
