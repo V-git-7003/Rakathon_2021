@@ -11,7 +11,7 @@ btn.onclick = function() {
             console.log("Not able to connect")
         }
     };
-    xhttp.open("GET", "https://nirqsn5nj2.execute-api.us-west-2.amazonaws.com/live", true);
+    xhttp.open("GET", "http://localhost:5000/prediction", true);
     xhttp.send();
 
 }
