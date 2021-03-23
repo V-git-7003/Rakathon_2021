@@ -16,4 +16,4 @@ The user inputs the news article from the postman request, which is read API. Th
 ## Future
 **In our future version there will be UI hosted in amazon, and the API is going to be done in serverless Lambda application. Hence, the user will have a smooth experience. Furthermore, we will generate artificial news articles to balance as well as increase the data count. This will enable us to use more sophisticated models such as Convolution Neural Network. **
 
-**To summarize, in future the user will have UI with input box, and a submit button as well as better prediction results. Currently, the prediction accuracy is around 60% for both the models. Hence, by default we use the Naive Bayes model, which in future will left out at the users discretion to choice the model.**
+**To summarize, in future the user will have UI with input box, and a submit button as well as better prediction results. Currently, the prediction accuracy is around 60% for both the models. Hence, by default we use the Naive Bayes model, which in future will left out at the users discretion to choose the model.**
